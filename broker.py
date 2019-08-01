@@ -43,11 +43,16 @@ class Shell:
         # Subscribe Topic from here
         connect_client.subscribe(self._topic_)
 
+    def on_message_(self, message_client, userdata, msg):
+        # print the message received from the subscribed topic
+        pass
+
     def shell_loop(self):
         self._client.loop_forever()
 
     def shell_connect(self):
         self._client.on_connect = self.on_connect_
+        self._client.on_message = self.on_message_
 
         self._client.username_pw_set(username, password)
         self._client.connect(broker_ip, broker_port_no, 60)
