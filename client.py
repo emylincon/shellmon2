@@ -112,5 +112,10 @@ def mqtt_connect():
 
 def main():
     start_up()
-    mqtt_connect()
+    try:
+        mqtt_connect()
+    except KeyboardInterrupt:
+        print('Programme Terminated')
+        for i in thread_list:
+            i.stop()
 
