@@ -27,6 +27,7 @@ def start_up():
     print('-----------------------------------')
 
     broker_ip = ip_address()
+    print('Broker ip: {}'.format(broker_ip))
 
     print('-----------------------------------')
 
