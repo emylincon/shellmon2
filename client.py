@@ -17,7 +17,6 @@ def subscribe_to(data):
     d_list = ast.literal_eval(data)
     topic_list.append(message())
     mo = set(d_list) - set(topic_list)
-    print('sub: ', mo)
     return len(mo), mo
 
 
