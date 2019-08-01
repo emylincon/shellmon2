@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 import os
-import socket
+import subprocess as sp
 from threading import Thread
 import ast
 
@@ -45,9 +45,8 @@ class Shell:
         self._client.username_pw_set(username, password)
         self._client.connect(broker_ip, broker_port_no, 60)
 
-        cl = Thread(target=self.shell_loop)
-        thread_list.append(cl)
-        cl.start()
+        thread_list.append(Thread(target=self.shell_loop))
+        thread_list[-1].start()
 
 
 def daemon_func(args):
@@ -57,6 +56,12 @@ def daemon_func(args):
 def thread_def(arg):
     thread_list.append(Thread(target=daemon_func, args=(arg,)))
     thread_list[-1].start()
+
+
+def message():
+    cmd = ['cat /etc/hostname']
+    hostname = str(sp.check_output(cmd, shell=True), 'utf-8')[0:-1]
+    return hostname
 
 
 def start_up():
@@ -114,8 +119,11 @@ def main():
     start_up()
     try:
         mqtt_connect()
+        client.publish(topic, message())
     except KeyboardInterrupt:
         print('Programme Terminated')
         for i in thread_list:
             i.stop()
 
+
+main()
