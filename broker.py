@@ -12,6 +12,12 @@ sub_list = []   # all topics
 thread_list = []   # all threads
 
 
+def ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
+
+
 def start_up():
     global broker_ip
 
@@ -58,12 +64,6 @@ def thread_def(arg):
     thread_list[-1].start()
 
 
-def ip_address():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
-
-
 # Callback Function on Connection with MQTT Server
 def on_connect(connect_client, userdata, flags, rc):
     print("Connected with Code :" +str(rc))
@@ -103,6 +103,7 @@ def mqtt_connect():
 
 
 def main():
+    start_up()
     try:
         mqtt_connect()
 
