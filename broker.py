@@ -10,9 +10,6 @@ topic = 'shellmon'
 
 sub_list = []   # all topics
 thread_list = []   # all threads
-client_data = {}    # all data from client
-sub_pointer = 0     # keep track of subscriptions
-sl = 0   # length of sub_List
 
 
 def start_up():
@@ -26,6 +23,39 @@ def start_up():
     broker_ip = ip_address()
 
     print('-----------------------------------')
+
+
+class Shell:
+    _client = mqtt.Client()
+
+    def __init__(self, _topic_):
+        self._topic_ = _topic_
+
+    def on_connect_(self, connect_client, userdata, flags, rc):
+        print("Connected with Code :" + str(rc))
+        # Subscribe Topic from here
+        connect_client.subscribe(self._topic_)
+
+    def shell_loop(self):
+        self._client.loop_forever()
+
+    def shell_connect(self):
+        self._client.on_connect = self.on_connect_
+
+        self._client.username_pw_set(username, password)
+        self._client.connect(broker_ip, broker_port_no, 60)
+
+        thread_list.append(Thread(target=self.shell_loop))
+        thread_list[-1].start()
+
+
+def daemon_func(args):
+    Shell(args).shell_connect()
+
+
+def thread_def(arg):
+    thread_list.append(Thread(target=daemon_func, args=(arg,)))
+    thread_list[-1].start()
 
 
 def ip_address():
@@ -46,33 +76,15 @@ def on_message(message_client, userdata, msg):
     # print the message received from the subscribed topic
     print('Publisher: ', str(msg.payload, 'utf-8'))
     _topic = str(msg.payload, 'utf-8')
-    sub_list.append(_topic)
-    client_data[_topic] = []
-
-
-def on_connect2(connect_client, userdata, flags, rc):
-    global sub_pointer
-
-    print("Connected with Code :" +str(rc))
-    # Subscribe Topic from here
-    connect_client.subscribe(sub_list[sub_pointer])
-    sub_pointer += 1
-
-
-# Callback Function on Receiving the Subscribed Topic/Message
-def on_message2(message_client, userdata, msg):
-    # print the message received from the subscribed topic
-    print('Publisher: ', str(msg.payload, 'utf-8'))
-    data_ = str(msg.payload, 'utf-8').split()
-    client_data[data_[0]].append(' '.join(data_[1:]))  # client sends his topic and data
+    if _topic.split()[0] != 'bk':
+        sub_list.append(_topic)
+        thread_def(_topic)
+        message = "bk {}".format(sub_list)
+        client.publish(topic, message)
 
 
 def client_loop():
     client.loop_forever()
-
-
-def client_loop2():
-    client2.loop_forever()
 
 
 def mqtt_connect():
@@ -88,33 +100,6 @@ def mqtt_connect():
     cl = Thread(target=client_loop)
     thread_list.append(cl)
     cl.start()
-
-
-def client_connect():
-    global client2
-
-    client2 = mqtt.Client()
-    client2.on_connect = on_connect2
-    client2.on_message = on_message2
-
-    client2.username_pw_set(username, password)
-    client2.connect(broker_ip, broker_port_no, 60)
-
-    cl = Thread(target=client_loop2)
-    thread_list.append(cl)
-    cl.start()
-
-
-def check_sub():
-    while True:
-        try:
-            if len(sub_list) != sl:
-                d = Thread(target=client_connect)
-                thread_list.append(d)
-                d.start()
-        except KeyboardInterrupt:
-            print("Check Sub stopped")
-            break
 
 
 def main():
