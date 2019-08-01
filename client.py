@@ -3,6 +3,8 @@ import os
 import subprocess as sp
 from threading import Thread
 import ast
+import random as r
+import time
 
 username = 'shellmon'
 password = 'shellmon'
@@ -94,6 +96,8 @@ def on_message(message_client, userdata, msg):
         sub = subscribe_to(' '.join(t_topic[1:]))
         if sub[0] > 0:
             for topics in sub[1]:
+                t = r.randrange(3)
+                time.sleep(t)
                 thread_def(topics)
                 topic_list.append(topics)
 
