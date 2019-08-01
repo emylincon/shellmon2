@@ -12,14 +12,15 @@ sub_list = []   # all topics
 thread_list = []   # all threads
 client_data = {}    # all data from client
 sub_pointer = 0     # keep track of subscriptions
-sl = 0   # lenght of sub_List
+sl = 0   # length of sub_List
+
 
 def start_up():
     global broker_ip
 
     os.system('clear')
     print('-----------------------------------')
-    print('Welcome to MQTT Subscriber client')
+    print('Welcome to MQTT Broker')
     print('-----------------------------------')
 
     broker_ip = ip_address()
