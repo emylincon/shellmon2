@@ -2,6 +2,8 @@ import paho.mqtt.client as mqtt
 import os
 import socket
 from threading import Thread
+import random as r
+import time
 
 username = 'shellmon'
 password = 'shellmon'
@@ -86,6 +88,7 @@ def on_message(message_client, userdata, msg):
         sub_list.append(_topic)
         thread_def(_topic)
         message = "bk {}".format(sub_list)
+        time.sleep(r.randrange(3))
         client.publish(topic, message)
 
 
