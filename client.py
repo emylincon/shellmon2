@@ -15,6 +15,7 @@ topic_list = []
 
 def subscribe_to(data):
     d_list = ast.literal_eval(data)
+    topic_list.append(message())
     mo = set(d_list) - set(topic_list)
     return len(mo), mo
 
@@ -26,7 +27,7 @@ class Shell:
         self._topic_ = _topic_
 
     def on_connect_(self, connect_client, userdata, flags, rc):
-        print("Connected with Code :" + str(rc))
+        print("Subscribed to {} :".format(self._topic_) + str(rc))
         # Subscribe Topic from here
         connect_client.subscribe(self._topic_)
 
@@ -79,7 +80,7 @@ def start_up():
 
 # Callback Function on Connection with MQTT Server
 def on_connect(connect_client, userdata, flags, rc):
-    print("Connected with Code :" +str(rc))
+    print("subscribed to {} :".format(topic) +str(rc))
     # Subscribe Topic from here
     connect_client.subscribe(topic)
 
