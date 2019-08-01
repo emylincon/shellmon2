@@ -39,7 +39,7 @@ class Shell:
         self._topic_ = _topic_
 
     def on_connect_(self, connect_client, userdata, flags, rc):
-        print("Connected with Code :" + str(rc))
+        print("Subscribed to {} :".format(self._topic_) + str(rc))
         # Subscribe Topic from here
         connect_client.subscribe(self._topic_)
 
