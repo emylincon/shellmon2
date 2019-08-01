@@ -95,6 +95,7 @@ def on_message(message_client, userdata, msg):
         sub = subscribe_to(' '.join(t_topic[1:]))
         if sub[0] > 0:
             for topics in sub[1]:
+                print('t: ', topics)
                 thread_def(topics)
 
 
