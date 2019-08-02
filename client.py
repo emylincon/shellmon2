@@ -106,6 +106,10 @@ def client_loop():
     client.loop_forever()
 
 
+def shellmon_publish(_msg_):
+    client.publish(message(), _msg_)
+
+
 def mqtt_connect():
     global client
 
