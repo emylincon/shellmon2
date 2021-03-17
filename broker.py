@@ -10,8 +10,8 @@ password = 'shellmon'
 broker_port_no = 1883
 topic = 'shellmon'
 
-sub_list = []   # all topics
-thread_list = []   # all threads
+sub_list = []  # all topics
+thread_list = []  # all threads
 
 
 def ip_address():
@@ -123,5 +123,3 @@ def main():
 
 
 main()
-
-# pub

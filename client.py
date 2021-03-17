@@ -10,7 +10,7 @@ username = 'shellmon'
 password = 'shellmon'
 broker_port_no = 1883
 topic = 'shellmon'
-thread_list = []   # all threads
+thread_list = []  # all threads
 shell_record = {}
 topic_list = []
 
@@ -82,7 +82,7 @@ def start_up():
 
 # Callback Function on Connection with MQTT Server
 def on_connect(connect_client, userdata, flags, rc):
-    print("subscribed to {} :".format(topic) +str(rc))
+    print("subscribed to {} :".format(topic) + str(rc))
     # Subscribe Topic from here
     connect_client.subscribe(topic)
 
