@@ -4,7 +4,7 @@ import socket
 from threading import Thread
 import random as r
 import time
-from MyDatabase import *
+from MyDatabase import Database
 
 db = Database()
 
