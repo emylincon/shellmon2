@@ -1,21 +1,47 @@
 import pickle
 import paho.mqtt.client as mqtt
 import socket
-import sqlite3
 from threading import Thread
 import random as r
 import time
+from MyDatabase import *
+
+db = Database()
 
 '''
-topics subscribe
-migration request
-
-topics to publish
+topics to subscribe
 system util
 
-migrate if soure Ip matches
+topics to publish
+migration request
 
-function to handle request
+send data to db
+
+open function:
+    db insert
+    migrate_request
+    
+data format
+
+system_util = {
+                'node_ip': 1.2.3.4,
+                't_stamp': 1234,
+                'util':{
+                        'cpu': 10,
+                        'mem': 20,
+                        'net': 30,
+                        'sto': 40,
+                        'bat': 50
+                        }
+                }
+
+migration_request = {
+        't_stamp': '1234',
+        'source_ip': '1.2.3.4',
+        'dest_ip': '1.2.3.5',
+        'cont_id': 'xyz'
+        }
+
 '''
 
 
@@ -46,8 +72,8 @@ class BrokerCom:
     def on_message(self, message_client, userdata, msg):
         print(f'Topic received: {msg.topic}')
         data = pickle.loads(msg.payload)
-        if data['source_ip'] == self.mec_ip:
-            handle_migration(data=data)
+        self.edge_servers.add(data['node_ip'])  # adds to the set of edge servers
+        db_insert(data)
 
     def publish(self, topic, data):
         self.client.publish(topic, data)
@@ -73,28 +99,30 @@ def ip_address():
     return s.getsockname()[0]
 
 
-def handle_migration(data):
-    print(f'handling \n{data}')
+def db_insert(data):
+    db.add_data(data)
+    print(data)
+
+
+def migration_req():
+    try:
+        migration_request = {
+            't_stamp': time.time(),
+            'source_ip': r.choice(list(broker.edge_servers)),
+            'dest_ip': r.choice(list(broker.edge_servers)),
+            'cont_id': r.randrange(999999999999)
+        }
+        data = pickle.dumps(migration_request)
+        broker.publish(topic='migration', data=data)
+        print(f'published \n {migration_request}')
+    except IndexError:
+        print('Edge servers List Empty')
 
 
 def run():
-    while True:
-        system_util = {
-            'node_ip': ip_address(),
-            't_stamp': time.time(),
-            'util': {
-                'cpu': r.randrange(30, 90),
-                'mem': r.randrange(20, 90),
-                'net': r.randrange(10, 90),
-                'sto': r.randrange(30, 90),
-                'bat': r.randrange(20, 90),
-            }
-        }
-        data = pickle.dumps(system_util)
-        broker.publish(topic='util', data=data)
-        time.sleep(60)
+    pass
 
 
-broker = BrokerCom(user='yrtwmwao', pw='FmgTf5G8r-4f', ip='m24.cloudmqtt.com', sub_topic='migration')
-
-run()
+broker = BrokerCom(user='yrtwmwao', pw='FmgTf5G8r-4f', ip='m24.cloudmqtt.com', sub_topic='util')
+# {'node_ip': '136.148.147.234', 't_stamp': 1616190724.9944427,
+# 'util': {'cpu': 89, 'mem': 68, 'net': 34, 'sto': 61, 'bat': 22}}
