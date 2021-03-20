@@ -68,6 +68,7 @@ class Database:
         checks if node is in database
         :param node: str ip_address
         :return: node id or False
+        :rtype: bool or str
         """
         query = self.session.query(Server).filter_by(node_ip=node).first()
         if query:
@@ -90,6 +91,7 @@ class Database:
                         }
                 }
         :return: True or False
+        :rtype: bool
         """
         try:
             server_id = self.is_node(data['node_ip'])
