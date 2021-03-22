@@ -68,6 +68,10 @@ def db_insert(data):
 
 
 def migration_req():
+    '''
+    edit this
+    :return:
+    '''
     try:
         migration_request = {
             't_stamp': time.time(),
