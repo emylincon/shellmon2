@@ -3,6 +3,9 @@ import socket
 import random as r
 import time
 from BrokerCommunication import MyBroker
+from config import Data
+
+my_config = Data()
 
 '''
 topics subscribe
@@ -63,6 +66,6 @@ def run():
         time.sleep(60)
 
 
-broker = BrokerCom(user='yrtwmwao', pw='FmgTf5G8r-4f', ip='m24.cloudmqtt.com', sub_topic='migration', port=16470)
+broker = BrokerCom(user=my_config.user, pw=my_config.pw, ip=my_config.ip, sub_topic='util', port=my_config.port)
 
 run()

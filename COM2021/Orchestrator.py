@@ -4,8 +4,10 @@ import socket
 import time
 from BrokerCommunication import MyBroker
 from MyDatabase import Database
+from config import Data
 
 db = Database()
+my_config = Data()
 
 '''
 topics to subscribe
@@ -86,4 +88,4 @@ def migration_req():
         print('Edge servers List Empty')
 
 
-broker = BrokerCom(user='yrtwmwao', pw='FmgTf5G8r-4f', ip='m24.cloudmqtt.com', sub_topic='util', port=16470)
+broker = BrokerCom(user=my_config.user, pw=my_config.pw, ip=my_config.ip, sub_topic='util', port=my_config.port)
